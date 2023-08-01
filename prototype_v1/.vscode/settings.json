@@ -1,0 +1,30 @@
+{
+    "cmake.configureOnOpen": true,
+    "C_Cpp.default.compilerPath": "",
+    "idf.adapterTargetName": "esp32",
+    "files.associations": {
+        ".env": "dotenv",
+        "string.h": "c",
+        "sensor_simulator.h": "c",
+        "stdio.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "inet.h": "c",
+        "ip4_addr.h": "c",
+        "netif.h": "c",
+        "esp_netif.h": "c",
+        "socket.h": "c",
+        "sdkconfig.h": "c",
+        "sockets.h": "c",
+        "config.h": "c",
+        "esp_mac.h": "c",
+        "inttypes.h": "c",
+        "esp_event.h": "c",
+        "bitset": "c",
+        "initializer_list": "c",
+        "regex": "c"
+    },
+    "idf.flashType": "UART",
+    "idf.portWin": "COM4"
+}
