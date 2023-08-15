@@ -52,9 +52,7 @@ char* create_message_string(void) {
 	char* msg;
 
 	int str_result = asprintf(&msg,
-		// "temperature|%d;humidity|%d;precipitation|%d;windSpeed|%d;pressure|%d;luminosity|%d;groundHumidity|%d",
-		// "t|%d;ah|%d;pc|%d;w|%d;p|%d;l|%d;gh|%d",
-		"t|%d|ah|%d|pc|%d|w|%d|p|%d|l|%d|gh|%d",
+		"temperature|%d;humidity|%d;rain_mm|%d;wind_speed|%d;pressure|%d;luminosity|%d;ground_humidity|%d",
 		get_temperature(), get_humidity(), get_precipitation(), get_wind_speed(), get_pressure(),
 		get_luminosity(), get_ground_humidity());
 	

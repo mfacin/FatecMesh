@@ -18,7 +18,7 @@
 #include "mqtt_event_handler.h"
 
 // sizes of rx and tx buffers
-// #define TX_SIZE		1460
+#define TX_SIZE		1460
 #define RX_SIZE		1500
 #define TX_DELAY_MS	5 * 1000 	// 5 sec
 
@@ -26,8 +26,11 @@
 #define MESH_MAX_LAYER	6
 #define MESH_TOPOLOGY	0
 #define MESH_CHANNEL	0
-#define ROUTER_SSID		"Windows-Matheus"
-#define ROUTER_PASSWD	"password"
+#define ROUTER_SSID		"net318_2.4G"
+#define ROUTER_PASSWD	"27413185940"
+
+#define MQTT_PORT 5000
+#define MQTT_IP "192.168.0.14"
 
 esp_err_t mqtt_task_start(void);
 
@@ -45,25 +48,17 @@ static mesh_config_t CONFIG = {
 
 esp_mqtt_client_handle_t mqtt_client;
 static esp_mqtt_client_config_t mqtt_cfg = {
-	.broker.address.uri = "mqtt://20.226.34.95:1883"
-	// .broker.address.uri = "mqtt://192.168.137.1:1883"
+	// .broker.address.uri = "mqtt://20.226.34.95:4041"
+	.broker.address.uri = "mqtt://192.168.0.1:5000"
 };
 
-// static uint8_t tx_buf[TX_SIZE] = { 0 };
+static uint8_t tx_buf[TX_SIZE] = { 0 };
 static uint8_t rx_buf[RX_SIZE] = { 0 };
 
 
 // mqtt publishing transmission
 void mqtt_tx(void *arg) {
-	vTaskDelay(TX_DELAY_MS / portTICK_PERIOD_MS);
-
 	CONFIG.is_running = true;
-	bool is_subscribed = false;
-
-	// mqtt starter
-	mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
-    esp_mqtt_client_register_event(mqtt_client, ESP_EVENT_ANY_ID, mqtt_event_handler, &CONFIG);
-    esp_mqtt_client_start(mqtt_client);
 
 	// message sending loop
 	while (CONFIG.is_running) 	{
@@ -78,21 +73,6 @@ void mqtt_tx(void *arg) {
 			continue;
 		}
 
-		if (!is_subscribed) {
-			char* sub_topic;
-			int sub_topic_str_result = asprintf(&sub_topic, "/fatecmeshiot/Station%02X%02X%02X/cmd", CONFIG.MAC[3], CONFIG.MAC[4], CONFIG.MAC[5]);
-
-			if (sub_topic_str_result < 0) {
-				ESP_LOGE(CONFIG.MESH_TAG, "> Error creating topic string: %s", sub_topic);
-				vTaskDelay(TX_DELAY_MS / portTICK_PERIOD_MS);
-				continue;
-			}
-
-			int msg_id = esp_mqtt_client_subscribe(mqtt_client, sub_topic, 0);
-    		ESP_LOGI(CONFIG.MESH_TAG, ">Subscribed successful: msg_id=%d", msg_id);
-			is_subscribed = true;
-		}
-
 		char* values = create_message_string();
 		char* attr = strtok(values, ";");
 
@@ -100,7 +80,7 @@ void mqtt_tx(void *arg) {
 			char* topic;
 
 			// /iot/station/{number}/attrs/{tag|valor}
-			int topic_str_result = asprintf(&topic, "/ul/fatecmeshiot/Station%02X%02X%02X/attrs", CONFIG.MAC[3], CONFIG.MAC[4], CONFIG.MAC[5]);
+			int topic_str_result = asprintf(&topic, "/iot/station/%d%d%d/attrs/%s", CONFIG.MAC[3], CONFIG.MAC[4], CONFIG.MAC[5], attr);
 
 			if (topic_str_result < 0) {
 				ESP_LOGE(CONFIG.MESH_TAG, "> Error creating topic string: %s", topic);
@@ -112,7 +92,7 @@ void mqtt_tx(void *arg) {
 
 			// MQTT publish here
 			// não funciona :(
-			int publish_err = esp_mqtt_client_publish(mqtt_client, topic, attr, 0, 1, 0);
+			int publish_err = esp_mqtt_client_publish(mqtt_client, topic, NULL, 0, 0, 0);
 
 			if (publish_err < 0) {
 				ESP_LOGE(CONFIG.MESH_TAG, "> Error sending MQTT message");
@@ -123,8 +103,88 @@ void mqtt_tx(void *arg) {
 			ESP_LOGI(CONFIG.MESH_TAG, "> Message sent");
 
 			attr = strtok(NULL, ";");
-			vTaskDelay(20 / portTICK_PERIOD_MS);
+			vTaskDelay(TX_DELAY_MS / portTICK_PERIOD_MS);
 		}
+	}
+
+	// deleting task after ending
+	vTaskDelete(NULL);
+}
+
+// message transmission
+void comm_tx(void *arg) {
+	CONFIG.is_running = true;
+	esp_err_t err;
+
+	// mqtt ipv4 address structure
+	mesh_addr_t dest;
+	esp_ip4_addr_t mqtt_ip;
+	dest.mip.port = (uint16_t) MQTT_PORT;
+
+	// parsing the ip
+	do {
+		err = esp_netif_str_to_ip4(MQTT_IP, &mqtt_ip);
+
+		// checking if parse succeed
+		if (err) {
+			ESP_LOGE(CONFIG.MESH_TAG, "> Error parsing IP %s: 0x%x", MQTT_IP, err);
+			vTaskDelay(1 * 1000 / portTICK_PERIOD_MS);
+			continue;
+		}
+
+		// it parsed, finishing the address structure
+		dest.mip.ip4 = mqtt_ip;
+	} while (err);
+
+	// message sending loop
+	while (CONFIG.is_running) 	{
+		if (!CONFIG.is_tods_reachable) {
+			ESP_LOGE(CONFIG.MESH_TAG, "> External network is unreachable");
+			vTaskDelay(TX_DELAY_MS / portTICK_PERIOD_MS);
+			continue;
+		}
+
+		char* payload = create_message_string();
+
+		// cheking if payload generated
+		if (strcmp("", payload) == 0 ) {
+			ESP_LOGE(CONFIG.MESH_TAG, "> Error generating payload string");
+			vTaskDelay(TX_DELAY_MS / portTICK_PERIOD_MS);
+			continue;
+		}
+		
+		// checking if payload do not exceed maximum size
+		if (sizeof(payload) > MESH_MPS) {
+			ESP_LOGE(CONFIG.MESH_TAG, "> Generated payload is too long: %d, max is %d", sizeof(payload), MESH_MPS);
+			vTaskDelay(TX_DELAY_MS / portTICK_PERIOD_MS);
+			continue;
+		}
+
+		// copyng payload to tx buffer
+		strcpy(&tx_buf, payload);
+
+		// creating data structure
+		mesh_data_t data;
+		data.data = tx_buf;
+		data.size = sizeof(tx_buf);
+		data.proto = MESH_PROTO_BIN;
+		data.tos = MESH_TOS_P2P;
+
+		mesh_addr_t* dest_pointer = &dest;
+
+		// sending message
+		ESP_LOGI(CONFIG.MESH_TAG, "> Sending message to " IPSTR ": %s", IP2STR(&dest_pointer->mip.ip4), tx_buf);
+		err = esp_mesh_send(&dest, &data, MESH_DATA_TODS, NULL, 0);
+
+		// checking for error		
+		if (err) {
+			ESP_LOGE(CONFIG.MESH_TAG, "> Error sending message to " IPSTR ": 0x%x", IP2STR(&dest_pointer->mip.ip4), err);
+			vTaskDelay(TX_DELAY_MS / portTICK_PERIOD_MS);
+			continue;
+		} 
+		
+		// message sent, putting a delay to send again
+		ESP_LOGI(CONFIG.MESH_TAG, "> Message sent to " IPSTR, IP2STR(&dest_pointer->mip.ip4));
 		vTaskDelay(TX_DELAY_MS / portTICK_PERIOD_MS);
 	}
 
@@ -167,6 +227,7 @@ void comm_tods_rx(void *arg) {
 			continue;
 		}
 
+		mesh_addr_t* dest_pointer = &dest;
 		sock_err = connect(sock, (struct sockaddr*) &dest_addr, sizeof(dest_addr));
 
 		if (sock_err < 0) {
@@ -200,7 +261,8 @@ esp_err_t mqtt_task_start(void) {
 
 	if (!is_mqtt_started) {
 		is_mqtt_started = true;
-		xTaskCreate(mqtt_tx, "MQTT_TX", 3072, NULL, 5, NULL);
+		// xTaskCreate(mqtt_tx, "MQTT_TX", 3072, NULL, 5, NULL);
+		xTaskCreate(comm_tx, "COMM_TX", 3072, NULL, 5, NULL);
 	}
 
 	return ESP_OK;
@@ -296,4 +358,9 @@ void app_main(void) {
 			esp_mesh_get_topology(),
 			esp_mesh_get_topology() ? "(chain)" : "(tree)",
 			esp_mesh_is_ps_enabled());
+	
+	// mqtt starter
+	//mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
+    //esp_mqtt_client_register_event(mqtt_client, ESP_EVENT_ANY_ID, mqtt_event_handler, &CONFIG);
+    //esp_mqtt_client_start(mqtt_client);
 }

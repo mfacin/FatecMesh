@@ -26,5 +26,5 @@
         "regex": "c"
     },
     "idf.flashType": "UART",
-    "idf.portWin": "COM8"
+    "idf.portWin": "COM4"
 }
