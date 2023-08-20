@@ -41,6 +41,6 @@ int get_luminosity(void);
 */
 int get_ground_humidity(void);
 
-char* create_message_string(void);
+char* create_sensor_data_string(void);
 
 #endif

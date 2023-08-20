@@ -1,8 +1,12 @@
-# Protótipo de comunicação
+# Programa Base de Testes
 
-Esse protótipo é baseado no exemplo *"Mesh Internal Communication Example"* disponibilizado pela Espressif no framework ESP-IDF.  
+Esse programa será utilizado como base para os testes de segurança do trabalho. Ele não possui nenhuma solução de segurança implementada.  
 
-Ele implementa a lógica por traz do projeto [SmartWeather](https://github.com/senavn/SmartWeather-painlessMesh) no ESP-IDF a fim de disponibilizar o maior controle possível sobre a rede mesh para a pesquisa realizada.
+O código implementa a lógica por traz do projeto [SmartWeather](https://github.com/senavn/SmartWeather-painlessMesh) no ESP-IDF a fim de disponibilizar o maior controle possível sobre a rede mesh para a pesquisa realizada.
+
+## Funcionalidade
+
+Esse programa possibilita os nós enviarem os dados dos seus sensores ao Context Broker e receber comandos para acender o LED embarcado.  
 
 ## Organização do código
 

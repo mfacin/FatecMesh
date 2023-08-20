@@ -48,13 +48,11 @@ int get_ground_humidity(void) {
 	return rand_range(80, 90);
 }
 
-char* create_message_string(void) {
+char* create_sensor_data_string(void) {
 	char* msg;
 
 	int str_result = asprintf(&msg,
-		// "temperature|%d;humidity|%d;precipitation|%d;windSpeed|%d;pressure|%d;luminosity|%d;groundHumidity|%d",
-		// "t|%d;ah|%d;pc|%d;w|%d;p|%d;l|%d;gh|%d",
-		"t|%d|ah|%d|pc|%d|w|%d|p|%d|l|%d|gh|%d",
+		"DATA_TO_MQTT;t|%d|ah|%d|pc|%d|w|%d|p|%d|l|%d|gh|%d",
 		get_temperature(), get_humidity(), get_precipitation(), get_wind_speed(), get_pressure(),
 		get_luminosity(), get_ground_humidity());
 	

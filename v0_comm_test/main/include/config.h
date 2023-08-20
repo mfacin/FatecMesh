@@ -12,12 +12,10 @@ typedef struct {
 	bool is_running;
 	bool is_mesh_connected;
 	bool is_tods_reachable;
-	bool is_mqtt_connected;
 	int mesh_layer;
 	mesh_addr_t mesh_parent_addr;
 	esp_netif_t *netif_sta;
-
-	esp_err_t (*mqtt_task_start)(void);
+	void (*comm_task_start)(void);
 } mesh_config_t;
 
 #endif

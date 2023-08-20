@@ -23,8 +23,14 @@
         "esp_event.h": "c",
         "bitset": "c",
         "initializer_list": "c",
-        "regex": "c"
+        "regex": "c",
+        "esp_wifi.h": "c",
+        "gpio.h": "c",
+        "mesh_event_handler.h": "c",
+        "stdbool.h": "c",
+        "search.h": "c",
+        "func_back": "c"
     },
     "idf.flashType": "UART",
-    "idf.portWin": "COM8"
+    "idf.portWin": "COM4"
 }

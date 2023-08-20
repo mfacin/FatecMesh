@@ -14,11 +14,12 @@ Esse repositório contém o projeto desenvolvido para o Trabalho de Conclusão d
 
 Este repositório está dividido na seguinte estrutura:
 
-[`prototype_v1/`](./prototype_v1/) - Contém o código no framework ESP-IDF do protótipo  
+[`v0_comm_test/`](./v0_comm_test/) - Contém o código de teste de comunicação entre os nós  
+[`v1_base_code/`](./v1_base_code/) - Contém o código base da aplicação que será utilizada nos testes  
 [`images/`](./images/) - Imagens de apoio e explicações  
 [`postman/`](./postman/) - Arquivos de configuração do postman
 
-Os diretórios `prototype_v1/` e `postman/` possuem os seus próprios arquivos `README.md` explicando em detalhes o propósito e utilização do código e API.
+Os diretórios `v0_comm_test/`, `v1_base_code/` e `postman/` possuem os seus próprios arquivos `README.md` explicando em detalhes o propósito e utilização do código e API.
 
 ## Arquitetura do projeto
 

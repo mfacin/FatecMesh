@@ -1,14 +1,13 @@
-# Protótipo de comunicação
+# Teste de Comunicação
 
 Esse protótipo é baseado no exemplo *"Mesh Internal Communication Example"* disponibilizado pela Espressif no framework ESP-IDF.  
 
-Ele implementa a lógica por traz do projeto [SmartWeather](https://github.com/senavn/SmartWeather-painlessMesh) no ESP-IDF a fim de disponibilizar o maior controle possível sobre a rede mesh para a pesquisa realizada.
+Ele implementa um processo de comunicação básica dos nós com a rede externa.
 
 ## Organização do código
 
-`main/mesh_main.c` - Contém as inicialização do WiFi, mesh e MQTT, as tasks de envio das mensagens MQTT, e a retransmissão de mensagens para a rede externa pelo root.  
+`main/mesh_main.c` - Contém as inicialização do WiFi e mesh, a tarefa de transmissão de mensagens sobre os sensores, e a retransmissão de mensagens para a rede externa pelo root.  
 `main/mesh_event_handler.c` - Contém o handler dos eventos do esp_mesh.  
-`main/mqtt_event_handler.c` - Contém o handler dos eventos do mqtt_client.  
 `main/sensor_simulator.c` - Sintetiza os dados dos sensores a serem enviados pelo MQTT.
   
 `main/include/` - Contém os headers dos arquivos criados, além do header contendo a definição de `mesh_config_t`.

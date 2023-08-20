@@ -1,0 +1,629 @@
+{
+	"info": {
+		"_postman_id": "d5c126e0-ef41-42a1-bca2-b1564b6e5dfb",
+		"name": "FatecMesh",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27280403"
+	},
+	"item": [
+		{
+			"name": "Checar a saúdo do broker",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{url}}:4041/iot/about",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "4041",
+					"path": [
+						"iot",
+						"about"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criando um Service Group",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecmesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					},
+					{
+						"key": "apikey",
+						"value": "fatechmeshiot",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "resource",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"services\": [\n   {\n     \"apikey\":      \"fatecmeshiot\",\n     \"cbroker\":     \"http://orion:1026\",\n     \"entity_type\": \"Station\",\n     \"resource\":    \"\"\n   }\n ]\n}"
+				},
+				"url": {
+					"raw": "http://{{url}}:4041/iot/services/",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "4041",
+					"path": [
+						"iot",
+						"services",
+						""
+					],
+					"query": [
+						{
+							"key": "apikey",
+							"value": "fatechmeshiot",
+							"disabled": true
+						},
+						{
+							"key": "resource",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "_id",
+							"value": "64dad1ab4177a650f6635920",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resgatando os serviços cadastrados",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecmesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					},
+					{
+						"key": "apikey",
+						"value": "fatechmeshiot",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "resource",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://{{url}}:4041/iot/services/",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "4041",
+					"path": [
+						"iot",
+						"services",
+						""
+					],
+					"query": [
+						{
+							"key": "apikey",
+							"value": "fatechmeshiot",
+							"disabled": true
+						},
+						{
+							"key": "resource",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "_id",
+							"value": "64dad1ab4177a650f6635920",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastrando um dispositivo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecmesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"devices\": [\n    {\n     \"device_id\":   \"Station5BCB18\",\n     \"entity_name\": \"urn:ngsi-ld:Station:5BCB18\",\n     \"entity_type\": \"Station\",\n     \"protocol\":    \"PDI-IoTA-UltraLight\",\n     \"transport\":   \"MQTT\",\n     \"timezone\":    \"America/Sao_Paulo\",\n     \"attributes\": [\n       { \"object_id\": \"t\", \"name\": \"temperature\", \"type\": \"Integer\" },\n       { \"object_id\": \"p\", \"name\": \"pressure\", \"type\": \"Integer\" },\n       { \"object_id\": \"ah\", \"name\": \"humidity\", \"type\": \"Integer\" },\n       { \"object_id\": \"pc\", \"name\": \"precipitation\", \"type\": \"Integer\" },\n       { \"object_id\": \"w\", \"name\": \"windSpeed\", \"type\": \"Integer\" },\n       { \"object_id\": \"l\", \"name\": \"luminosity\", \"type\": \"Integer\" },\n       { \"object_id\": \"gh\", \"name\": \"groundHumidity\", \"type\": \"Integer\" }\n     ],\n    \"commands\": [\n        { \"name\": \"switch\", \"type\": \"command\" }\n    ]\n   },\n   {\n     \"device_id\":   \"Station5B4A88\",\n     \"entity_name\": \"urn:ngsi-ld:Station:5B4A88\",\n     \"entity_type\": \"Station\",\n     \"protocol\":    \"PDI-IoTA-UltraLight\",\n     \"transport\":   \"MQTT\",\n     \"timezone\":    \"America/Sao_Paulo\",\n     \"attributes\": [\n       { \"object_id\": \"t\", \"name\": \"temperature\", \"type\": \"Integer\" },\n       { \"object_id\": \"p\", \"name\": \"pressure\", \"type\": \"Integer\" },\n       { \"object_id\": \"ah\", \"name\": \"humidity\", \"type\": \"Integer\" },\n       { \"object_id\": \"pc\", \"name\": \"precipitation\", \"type\": \"Integer\" },\n       { \"object_id\": \"w\", \"name\": \"windSpeed\", \"type\": \"Integer\" },\n       { \"object_id\": \"l\", \"name\": \"luminosity\", \"type\": \"Integer\" },\n       { \"object_id\": \"gh\", \"name\": \"groundHumidity\", \"type\": \"Integer\" }\n     ],\n    \"commands\": [\n        { \"name\": \"switch\", \"type\": \"command\" }\n    ]\n   },\n   {\n     \"device_id\":   \"Station49B7AC\",\n     \"entity_name\": \"urn:ngsi-ld:Station:49B7AC\",\n     \"entity_type\": \"Station\",\n     \"protocol\":    \"PDI-IoTA-UltraLight\",\n     \"transport\":   \"MQTT\",\n     \"timezone\":    \"America/Sao_Paulo\",\n     \"attributes\": [\n       { \"object_id\": \"t\", \"name\": \"temperature\", \"type\": \"Integer\" },\n       { \"object_id\": \"p\", \"name\": \"pressure\", \"type\": \"Integer\" },\n       { \"object_id\": \"ah\", \"name\": \"humidity\", \"type\": \"Integer\" },\n       { \"object_id\": \"pc\", \"name\": \"precipitation\", \"type\": \"Integer\" },\n       { \"object_id\": \"w\", \"name\": \"windSpeed\", \"type\": \"Integer\" },\n       { \"object_id\": \"l\", \"name\": \"luminosity\", \"type\": \"Integer\" },\n       { \"object_id\": \"gh\", \"name\": \"groundHumidity\", \"type\": \"Integer\" }\n     ],\n    \"commands\": [\n        { \"name\": \"switch\", \"type\": \"command\" }\n    ]\n   },\n   {\n     \"device_id\":   \"Station5AF2F8\",\n     \"entity_name\": \"urn:ngsi-ld:Station:5AF2F8\",\n     \"entity_type\": \"Station\",\n     \"protocol\":    \"PDI-IoTA-UltraLight\",\n     \"transport\":   \"MQTT\",\n     \"timezone\":    \"America/Sao_Paulo\",\n     \"attributes\": [\n       { \"object_id\": \"t\", \"name\": \"temperature\", \"type\": \"Integer\" },\n       { \"object_id\": \"p\", \"name\": \"pressure\", \"type\": \"Integer\" },\n       { \"object_id\": \"ah\", \"name\": \"humidity\", \"type\": \"Integer\" },\n       { \"object_id\": \"pc\", \"name\": \"precipitation\", \"type\": \"Integer\" },\n       { \"object_id\": \"w\", \"name\": \"windSpeed\", \"type\": \"Integer\" },\n       { \"object_id\": \"l\", \"name\": \"luminosity\", \"type\": \"Integer\" },\n       { \"object_id\": \"gh\", \"name\": \"groundHumidity\", \"type\": \"Integer\" }\n     ],\n    \"commands\": [\n        { \"name\": \"switch\", \"type\": \"command\" }\n    ]\n   },\n   {\n     \"device_id\":   \"StationE0C3E4\",\n     \"entity_name\": \"urn:ngsi-ld:Station:E0C3E4\",\n     \"entity_type\": \"Station\",\n     \"protocol\":    \"PDI-IoTA-UltraLight\",\n     \"transport\":   \"MQTT\",\n     \"timezone\":    \"America/Sao_Paulo\",\n     \"attributes\": [\n       { \"object_id\": \"t\", \"name\": \"temperature\", \"type\": \"Integer\" },\n       { \"object_id\": \"p\", \"name\": \"pressure\", \"type\": \"Integer\" },\n       { \"object_id\": \"ah\", \"name\": \"humidity\", \"type\": \"Integer\" },\n       { \"object_id\": \"pc\", \"name\": \"precipitation\", \"type\": \"Integer\" },\n       { \"object_id\": \"w\", \"name\": \"windSpeed\", \"type\": \"Integer\" },\n       { \"object_id\": \"l\", \"name\": \"luminosity\", \"type\": \"Integer\" },\n       { \"object_id\": \"gh\", \"name\": \"groundHumidity\", \"type\": \"Integer\" }\n     ],\n    \"commands\": [\n        { \"name\": \"switch\", \"type\": \"command\" }\n    ]\n   }\n ]\n}"
+				},
+				"url": {
+					"raw": "http://{{url}}:4041/iot/devices",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "4041",
+					"path": [
+						"iot",
+						"devices"
+					],
+					"query": [
+						{
+							"key": "options",
+							"value": "keyValues==true",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excluindo um dispositivo",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecmesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{url}}:4041/iot/devices/Station5BCB18",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "4041",
+					"path": [
+						"iot",
+						"devices",
+						"Station5BCB18"
+					],
+					"query": [
+						{
+							"key": "options",
+							"value": "keyValues==true",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resgatando os dispositivos cadastrados",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecmesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{url}}:4041/iot/devices",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "4041",
+					"path": [
+						"iot",
+						"devices"
+					],
+					"query": [
+						{
+							"key": "options",
+							"value": "keyValues==true",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resgatando as entidades do Orion",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecMesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					}
+				],
+				"url": {
+					"raw": "http://{{url}}:1026/v2/entities/?options=keyValues",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities",
+						""
+					],
+					"query": [
+						{
+							"key": "options",
+							"value": "keyValues"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excluindo uma entidade no Orion",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "fiware-service",
+						"value": "fatecmesh",
+						"type": "text"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://{{url}}:1026/v2/entities/urn:ngsi-ld:Station:5BCB18",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities",
+						"urn:ngsi-ld:Station:5BCB18"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Thing",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Manualmente atualizando um atributo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecmesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"contextElements\": [\n        {\n            \"type\": \"Station\",\n            \"isPattern\": \"false\",\n            \"id\": \"urn:ngsi-ld:Station:5BCB18\",\n            \"attributes\": [\n                { \"name\": \"temperature\", \"type\": \"Number\", \"value\": 50 }\n            ]\n        }\n    ],\n    \"updateAction\": \"UPDATE\"\n}"
+				},
+				"url": {
+					"raw": "http://{{url}}:4041/v1/updateContext",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "4041",
+					"path": [
+						"v1",
+						"updateContext"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Enviando um comando (5BCB18)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecmesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"switch\": {\n      \"type\" : \"command\",\n      \"value\" : \"\"\n  }\n}"
+				},
+				"url": {
+					"raw": "http://{{url}}:1026/v2/entities/urn:ngsi-ld:Station:5BCB18/attrs",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities",
+						"urn:ngsi-ld:Station:5BCB18",
+						"attrs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resgatando os dados de um dispositivo (5BCB18)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "fiware-service",
+						"value": "fatecmesh",
+						"type": "text"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/",
+						"type": "text"
+					},
+					{
+						"key": "accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{url}}:1026/v2/entities/urn:ngsi-ld:Station:5BCB18?options=keyValues",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities",
+						"urn:ngsi-ld:Station:5BCB18"
+					],
+					"query": [
+						{
+							"key": "options",
+							"value": "keyValues"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Enviando um comando (5B4A88)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecmesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"switch\": {\n      \"type\" : \"command\",\n      \"value\" : \"\"\n  }\n}"
+				},
+				"url": {
+					"raw": "http://{{url}}:1026/v2/entities/urn:ngsi-ld:Station:5B4A88/attrs",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities",
+						"urn:ngsi-ld:Station:5B4A88",
+						"attrs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resgatando os dados de um dispositivo (5B4A88)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "fiware-service",
+						"value": "fatecmesh",
+						"type": "text"
+					},
+					{
+						"key": "fiware-servicepath",
+						"value": "/",
+						"type": "text"
+					},
+					{
+						"key": "accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{url}}:1026/v2/entities/urn:ngsi-ld:Station:5B4A88?options=keyValues",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities",
+						"urn:ngsi-ld:Station:5B4A88"
+					],
+					"query": [
+						{
+							"key": "options",
+							"value": "keyValues"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "20.226.34.95",
+			"type": "string"
+		}
+	]
+}
