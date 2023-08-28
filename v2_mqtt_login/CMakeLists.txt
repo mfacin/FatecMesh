@@ -3,4 +3,6 @@
 cmake_minimum_required(VERSION 3.16)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(prototype_v1)
+project(mqtt_v2_tls)
+
+target_add_binary_data(${CMAKE_PROJECT_NAME}.elf "main/mqtt_server.crt" TEXT)
