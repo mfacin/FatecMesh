@@ -63,8 +63,7 @@ static fatec_mesh_config_t config = {
 // mqtt client
 esp_mqtt_client_handle_t mqtt_client;
 static esp_mqtt_client_config_t mqtt_cfg = {
-	.broker.address.uri = "mqtt://20.226.34.95:1883"
-	// .broker.address.uri = "mqtt://192.168.137.1:1883"
+	.broker.address.uri = "mqtt://fatecmesh.tech:1883"
 };
 
 // static uint8_t tx_buf[TX_SIZE] = { 0 };

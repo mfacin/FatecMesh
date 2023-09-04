@@ -286,7 +286,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://{{url}}:4041/iot/devices",
+					"raw": "http://{{url}}:4041/iot/devices?options=keyValues",
 					"protocol": "http",
 					"host": [
 						"{{url}}"
@@ -299,8 +299,7 @@
 					"query": [
 						{
 							"key": "options",
-							"value": "keyValues==true",
-							"disabled": true
+							"value": "keyValues"
 						}
 					]
 				}
@@ -334,6 +333,44 @@
 						"v2",
 						"entities",
 						""
+					],
+					"query": [
+						{
+							"key": "options",
+							"value": "keyValues"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resgatando uma entidade (5BCB18)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "fiware-service",
+						"type": "text",
+						"value": "fatecMesh"
+					},
+					{
+						"key": "fiware-servicepath",
+						"type": "text",
+						"value": "/"
+					}
+				],
+				"url": {
+					"raw": "http://{{url}}:1026/v2/entities/urn:ngsi-ld:Station:5BCB18?options=keyValues",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"port": "1026",
+					"path": [
+						"v2",
+						"entities",
+						"urn:ngsi-ld:Station:5BCB18"
 					],
 					"query": [
 						{
@@ -622,7 +659,7 @@
 	"variable": [
 		{
 			"key": "url",
-			"value": "20.226.34.95",
+			"value": "fatecmesh.tech",
 			"type": "string"
 		}
 	]

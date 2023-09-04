@@ -8,6 +8,16 @@ O código implementa a lógica por traz do projeto [SmartWeather](https://github
 
 Esse programa possibilita os nós enviarem os dados dos seus sensores ao Context Broker e receber comandos para acender o LED embarcado.  
 
+A comunicação utiliza de prefixos, separados do payload por `;`, para indicar ao nó o tipo de comunicação. São eles:  
+
+- `DATA_TO_MQTT`: Enviada dos nós para o root. Indica ao root que ele deve realizar a publicação de uma mensagem MQTT, contendo o payload enviado.  
+- `DATA_FROM_MQTT`: Enviada do root para os nós. Contém uma mensagem recebida em um dos tópicos inscritos pela rede mesh.  
+- `SUBSCRIBE_MQTT`: Enviada dos nós para o root. Indica ao root que o nó deseja realizar a inscrição no tópico enviado.  
+- `SUBSCRIBE_OK`: Enviado do root para o nó que solicitou a inscrição. Indica que a inscrição foi bem sucedida e que o nó receberá os comandos nesse tópico.  
+- `SUBSCRIBE_FAIL`: Enviado do root para o nó que solicitou a inscrição. Indica que a inscrição não foi bem sucedida e que o nó deve tentar novamente.  
+
+Os dados são enviados via tópico `/ul/fatecmeshiot/StationXXXXXX/attrs`, e os comandos recebidos via tópico `/fatecmeshiot/StationXXXXXX/cmd`.  
+
 ## Organização do código
 
 `main/mesh_main.c` - Contém as inicialização do WiFi, mesh e MQTT, as tasks de envio das mensagens MQTT, e a retransmissão de mensagens para a rede externa pelo root.  

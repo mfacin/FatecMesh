@@ -82,9 +82,23 @@ services:
        - IOTA_MONGO_HOST=mongo-db
        - IOTA_MONGO_PORT=27017
        - IOTA_MONGO_DB=iotagentul
+       - IOTA_AMQP_DISABLED=true
        - IOTA_PROVIDER_URL=http://iot-agent:4041
+       - IOTA_DEFAULT_RESOURCE=
+       - IOTA_DEFAULT_KEY=fatecmeshiot
        - IOTA_MQTT_HOST=mosquitto
        - IOTA_MQTT_PORT=8883
+       - IOTA_MQTT_PROTOCOL=mqtts
+       - IOTA_MQTT_USERNAME=iot_agent
+       - IOTA_MQTT_PASSWORD=fatecmesh@
+       - IOTA_MQTT_CA=/opt/iotaul/keys/ca.crt
+       - IOTA_MQTT_CERT=/opt/iotaul/keys/server.crt
+       - IOTA_MQTT_REJECT_UNAUTHORIZED=false
+
+     volumes:
+       - ./mosquitto/keys/ca.crt:/opt/iotaul/keys/ca.crt
+       - ./mosquitto/keys/server.crt:/opt/iotaul/keys/server.crt
+
 
 volumes:
    db-data:

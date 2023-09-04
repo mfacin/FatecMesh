@@ -16,10 +16,21 @@ Este repositório está dividido na seguinte estrutura:
 
 [`v0_comm_test/`](./v0_comm_test/) - Contém o código de teste de comunicação entre os nós  
 [`v1_base_code/`](./v1_base_code/) - Contém o código base da aplicação que será utilizada nos testes  
+[`v2_mqtt_login/`](./v2_mqtt_login/) - Contém o código do cenário onde login e senha são implementados no MQTT  
+[`v3_mqtt_tls/`](./v3_mqtt_tls/) - Contém o código do cenário onde o TLS é implementado no MQTTS  
+  
+[`configs/`](./postman/) - Arquivos de configuração do Docker e Mosquitto para cada cenário  
 [`images/`](./images/) - Imagens de apoio e explicações  
-[`postman/`](./postman/) - Arquivos de configuração do postman
+[`keys/`](./keys/) - Chaves e certificados utilizados pelo TLS  
 
-Os diretórios `v0_comm_test/`, `v1_base_code/` e `postman/` possuem os seus próprios arquivos `README.md` explicando em detalhes o propósito e utilização do código e API.
+> (Importante notar que tais chaves foram utilizadas somente para propósitos de testes, e não estão sendo - **e nem devem ser** - utilizadas em nenhuma aplicação de produção, por isso estão expostas nesse repositório)  
+
+Cada diretório, exceto o `images/` e `keys/` contém seus próprios arquivos `README.md` explicando em detalhes o propósito e utilização do código e arquivos ali presentes.  
+
+Além dos diretórios, existem dois arquivos importantes na raíz do projeto:
+
+[`create_mqtt_env.py`](./create_mqtt_env.py) - Realiza todas as requisições HTTP necessárias para a criação do ambiente de testes do MQTT, Orion e IoT Agent.
+[`generate_keys.sh`](./generate_keys.sh) - Gera as chaves e certificados utilizados no TLS.
 
 ## Arquitetura do projeto
 
