@@ -31,7 +31,7 @@
 #define ROUTER_SSID		"Windows-Matheus"
 #define ROUTER_PASSWD	"password"
 #define MQTT_PASSWD		"fatecmesh@"
-#define MQTT_URI		"mqtt://fatecmesh.tech:8883"
+#define MQTT_URI		"mqtts://fatecmesh.tech:8883"
 
 // led related
 #define LED_PIN		GPIO_NUM_2
@@ -64,6 +64,14 @@ static fatec_mesh_config_t config = {
 
 // static uint8_t tx_buf[TX_SIZE] = { 0 };
 static uint8_t rx_buf[RX_SIZE] = { 0 };
+
+// keys and certificates
+extern const uint8_t mqtt_server_crt_start[]	asm("_binary_mqtt_server_crt_start");
+extern const uint8_t mqtt_server_crt_end[]		asm("_binary_mqtt_server_crt_end");
+extern const uint8_t client_crt_pem_start[] 	asm("_binary_client_crt_start");
+extern const uint8_t client_crt_pem_end[] 		asm("_binary_client_crt_end");
+extern const uint8_t client_key_pem_start[] 	asm("_binary_client_key_start");
+extern const uint8_t client_key_pem_end[] 		asm("_binary_client_key_end");
 
 // mqtt client: configuration is done on start_mqtt_client()
 esp_mqtt_client_handle_t mqtt_client;
@@ -317,12 +325,15 @@ void start_mqtt_client(void) {
 	
 	// configuring mqtt credentials
 	esp_mqtt_client_config_t mqtt_cfg = {
-		.credentials.username = malloc(strlen(config.mqtt_device_id) + 1),
-		.credentials.authentication.password = MQTT_PASSWD,
+		.credentials.authentication.key = (const char*) client_key_pem_start,
+		.credentials.authentication.certificate = (const char*) client_crt_pem_start,
 		.broker.address.uri = MQTT_URI,
+		.broker.verification.certificate = (const char*) mqtt_server_crt_start,
+		// .broker.verification.skip_cert_common_name_check = true
 	};
 
-	strcpy(mqtt_cfg.credentials.username, config.mqtt_device_id);
+	// ESP_LOGI(config.mesh_tag, mqtt_cfg.credentials.authentication.key);
+	// ESP_LOGI(config.mesh_tag, mqtt_cfg.credentials.authentication.certificate);
 
 	mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
 	ESP_ERROR_CHECK(esp_mqtt_client_register_event(mqtt_client, ESP_EVENT_ANY_ID, mqtt_event_handler, &config));

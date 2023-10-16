@@ -18,6 +18,7 @@ Este repositório está dividido na seguinte estrutura:
 [`v1_base_code/`](./v1_base_code/) - Contém o código base da aplicação que será utilizada nos testes  
 [`v2_mqtt_login/`](./v2_mqtt_login/) - Contém o código do cenário onde login e senha são implementados no MQTT  
 [`v3_mqtt_tls/`](./v3_mqtt_tls/) - Contém o código do cenário onde o TLS é implementado no MQTTS  
+[`v4_mqtt_tls_mutuo/`](./v4_mqtt_tls_mutuo/) - Contém o código do cenário onde a autenticação dos clientes via certificado é implementada no MQTTS  
   
 [`configs/`](./postman/) - Arquivos de configuração do Docker e Mosquitto para cada cenário  
 [`images/`](./images/) - Imagens de apoio e explicações  
@@ -34,7 +35,7 @@ Além dos diretórios, existem dois arquivos importantes na raíz do projeto:
 
 ## Arquitetura do projeto
 
-![Arquitetura do projeto](images/Arquitetura%20de%20rede_V2.png)
+![Arquitetura do projeto](images/arquitetura_rede.png)
 
 ### ESP32 e ESP-IDF
 

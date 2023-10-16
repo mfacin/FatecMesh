@@ -1,69 +1,67 @@
-# MQTT - TLS
+# MQTT - TLS Mútuo
 
-Essa é a implementação da segunda medida de segurança tomada: criptografia por TLS no MQTT, a fim de evitar que indivíduos não autorizados capturem informações sensíveis no tráfego da rede.  
+Essa é a implementação da terceira medida de segurança tomada: autenticação dos clientes via certificado RSA no MQTTS, a fim de evitar a utilização de credenciais roubadas para autenticação do MQTT.  
 
 ## Funcionalidade
 
-Esse programa implementa criptografia na comunicação MQTT entre o root e o broker, via TLS.  
+Esse programa implementa a autenticação dos clientes por certiciados RSA na comunicação com o broker MQTT, via TLS mútuo.  
 
-Para configurar o protocolo TLS, é necessário possuir os certificados e chaves do servidor e da Autoridade Certificadora (CA), caso os certificados sejam auto-assinados.  
+Para configurar o TLS mútuo, é necessário possuir os certificados e chaves do servidor e da Autoridade Certificadora (CA), caso os certificados sejam auto-assinados e criar os certificados dos clientes.  
 
 ### Geranção das chaves e certificados
 
 O primeiro passo é criar o certificado e chave da CA, utilizando o `openssl`. Esse comando apenas deve ser executado se os certificados forem auto-assinados, como é o caso desse cenário.
 
+Com o certificado do CA criado na versão anterior, é necessário criar uma chave para o cliente e, em seguida, a solicitação de assinatura a ser enviada para o CA.  
+
 ``` bash
-$ openssl req -new -x509 -days 365 -extensions v3_ca -keyout ca.key -out ca.crt -subj "/C=BR/ST=Sao Paulo/L=Sao Caetano do Sul/O=Fatec SCS CA/OU=IoT Mesh Security/CN=fatecmesh.tech/emailAddress=" -addext "subjectAltName=IP:150.230.81.30"
+$ openssl genrsa -out client.key 2048
+
+$ openssl req -new -out client.csr -key client.key -subj "/C=BR/ST=Sao Paulo/L=Sao Caetano do Sul/O=Fatec SCS/OU=IoT Mesh Security/CN=station/emailAddress="
 ```
 
-> O parâmetro `-subj` nesse comando permite que os dados de país, estado, cidade, organização, unidade organizacional, common-name, e e-mail sejam informados inline. Já o parâmetro `-addext` permite adicionar a extensão `subjectAltName`, para informar o IP do servidor.
+> O atributo CN nesse caso identificará o usuário conectado no broker.
 
-Com o certificado do CA, é necessário criar uma chave para o servidor e, em seguida, a solicitação de assinatura a ser enviada para o CA.  
-
-``` bash
-$ openssl genrsa -out server.key 2048
-
-$ openssl req -new -out server.csr -extensions v3_ca -key server.key -subj "/C=BR/ST=Sao Paulo/L=Sao Caetano do Sul/O=Fatec SCS/OU=IoT Mesh Security/CN=fatecmesh.tech/emailAddress=" -addext "subjectAltName=IP:150.230.81.30"
-```
-
-Com a solicitação de assinatura criada (`server.csr`), ela deve ser enviada ao CA para assinatura, ou, no caso desse cenário, ser auto-assinada:  
+Com a solicitação de assinatura criada (`client.csr`), ela deve ser enviada ao CA para assinatura, ou, no caso desse cenário, ser auto-assinada:  
 
 ``` bash
-$ openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 90 -extfile <(printf "subjectAltName=IP:150.230.81.30")
+$ openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 90
 ```
 
 ### Configuração do servidor
 
-O caminho para o certificado do CA, e certificado e chave do servidor devem ser informados no arquivo `mosquitto.conf` no servidor, junto com a versão do TLS e a nova porta (`8883`):
+O uso do certificado deve ser requerido pela configuração `require_certificate true`, e o nome de usuário será inferido pelo CN, como dito anteriormente, pela configuração `use_identity_as_username true`. Nesse caso, o arquivo de senhas não será mais utilizado, pois assume-se que o cliente com o certificado já é autorizado a se autenticar no broker.
 
 ``` txt
 persistence true
 persistence_location /mosquitto/data/
 log_dest file /mosquitto/log/mosquitto.log
 allow_anonymous false
-password_file /mosquitto/passwordfile
 port 8883
 cafile /mosquitto/ca_certificates/ca.crt
 keyfile /mosquitto/certs/server.key
 certfile /mosquitto/certs/server.crt
 tls_version tlsv1.2
+require_certificate true
+use_identity_as_username true
 ```
-
-> A versão do TLS utilizada nesse caso foi a 1.2, devido ao ESP-IDF não possuir suporte ao TLS 1.3.
 
 ### Configuração do client
 
-No dispositivo cliente, o certificado do CA deve ser adicionado ao projeto e indicado para compilação no final do arquivo `CMakeList.txt`:  
+No dispositivo cliente, o certificado e chave do cliente devem ser adicionados ao projeto e indicado para compilação no final do arquivo `CMakeList.txt`:  
 
 ``` make
-target_add_binary_data(${CMAKE_PROJECT_NAME}.elf "main/mqtt_server.crt" TEXT)
+target_add_binary_data(${CMAKE_PROJECT_NAME}.elf "main/client.crt" TEXT)
+target_add_binary_data(${CMAKE_PROJECT_NAME}.elf "main/client.key" TEXT)
 ```
 
 Para o carregamento da chave no código fonte, as seguintes funções devem ser chamadas no início do programa:  
 
 ``` C
-extern const uint8_t mqtt_server_crt_start[]  asm("_binary_mqtt_server_crt_start");
-extern const uint8_t mqtt_server_crt_end[]    asm("_binary_mqtt_server_crt_end");
+extern const uint8_t mqtt_client_crt_start[]  asm("_binary_mqtt_client_crt_start");
+extern const uint8_t mqtt_client_crt_end[]    asm("_binary_mqtt_client_crt_end");
+extern const uint8_t mqtt_client_key_start[]  asm("_binary_mqtt_client_key_start");
+extern const uint8_t mqtt_client_key_end[]    asm("_binary_mqtt_client_key_end");
 ```
 
 Em seguida, o certificado deve ser informado no objeto de configurações do client MQTT:  
@@ -71,9 +69,11 @@ Em seguida, o certificado deve ser informado no objeto de configurações do cli
 ``` C
 // configuring mqtt credentials
 esp_mqtt_client_config_t mqtt_cfg = {
-    // username, senha e uri configurados de acordo com a versão anterior
-    .credentials.username = malloc(strlen(config.mqtt_device_id) + 1),
-    .credentials.authentication.password = MQTT_PASSWD,
+    // certificado e chave do cliente
+    .credentials.authentication.key = (const char*) client_key_pem_start,
+    .credentials.authentication.certificate = (const char*) client_crt_pem_start,
+
+    // uri da conexão
     .broker.address.uri = MQTT_URI,
 
     // pointer para o certificado, com a função definida no início
@@ -82,8 +82,6 @@ esp_mqtt_client_config_t mqtt_cfg = {
     // para ignorar a verificação no CN no certificado:
     // .broker.verification.skip_cert_common_name_check = true
 };
-
-strcpy(mqtt_cfg.credentials.username, config.mqtt_device_id);
 ```
 
 
@@ -94,6 +92,8 @@ strcpy(mqtt_cfg.credentials.username, config.mqtt_device_id);
 `main/mqtt_event_handler.c` - Contém o handler dos eventos do mqtt_client.  
 `main/sensor_simulator.c` - Sintetiza os dados dos sensores a serem enviados pelo MQTT.  
 `main/mqtt_server.crt` - Certificado do CA para configuração do TLS.
+`main/client.crt` - Certificado do cliente para configuração do TLS mútuo.
+`main/client.key` - Chave do cliente para configuração do TLS mútuo.
   
 `main/include/` - Contém os headers dos arquivos criados, além do header contendo a definição de `mesh_config_t`.
 
