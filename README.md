@@ -19,6 +19,8 @@ Este repositório está dividido na seguinte estrutura:
 [`v2_mqtt_login/`](./v2_mqtt_login/) - Contém o código do cenário onde login e senha são implementados no MQTT  
 [`v3_mqtt_tls/`](./v3_mqtt_tls/) - Contém o código do cenário onde o TLS é implementado no MQTTS  
 [`v4_mqtt_tls_mutuo/`](./v4_mqtt_tls_mutuo/) - Contém o código do cenário onde a autenticação dos clientes via certificado é implementada no MQTTS  
+[`v5_protected_frames/`](./v5_protected_frames/) - Contém o código do cenário onde o recurso de _Protected Management Frames_ (PMF) é implementado  
+[`v6_wpa3/`](./v6_wpa3/) - Contém o código do cenário onde a obrigatoriedade do WPA3 é implementado  
   
 [`configs/`](./postman/) - Arquivos de configuração do Docker e Mosquitto para cada cenário  
 [`images/`](./images/) - Imagens de apoio e explicações  
