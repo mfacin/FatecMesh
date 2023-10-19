@@ -1,35 +1,30 @@
-# MQTT - WPA3
+# Criptografia da Memória Flash
 
-Essa é a implementação da quinta medida de segurança tomada: Implementação da autenticação por WPA3 no Wi-Fi.  
+Essa é a implementação da sexta e última medida de segurança tomada: Criptografia da Memória Flash.  
 
 ## Funcionalidade
 
-Esse programa implementa a obrigatoriedade da utilização do WPA3 na conexão Wi-Fi, protegendo a rede de ataques offline de força bruta mediante a captura do _4-way handshake_.  
+Esse programa implementa a criptografia dos dados contidos no chip de memória flash externa do ESP32, impedindo a sua leitura, mesmo com um _dump_ físico da memória.  
 
 ### Configuração do dispositivo
 
-Tanto dispositivo cliente (STA - _station_) quanto o _access point_ precisam ser compatível com a tecnologia WPA3. Segundo a Espressif, a última versão do ESP-IDF apresenta suporte à esse recurso.  
+O primeiro passo é fazer a criação de uma chave criptográfica a ser utilizada.  
 
-A sua ativação utiliza de poucas linhas de código, aplicando uma configuração à interface STA do Wi-Fi. Infelizmente o _access point_ utilizado não era compatível com o recurso SAE PUBLIC-KEY (PK), portanto, ela precisou ser desativada no código:  
-
-``` C
-wifi_config_t config_sec = {
-    .sta.pmf_cfg.required = true,
-    .sta.transition_disable = true,
-    // .sta.sae_pk_mode = true,
-    .sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH
-};
-
-ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &config_sec));
-ESP_ERROR_CHECK(esp_wifi_start()); // wifi start
+``` bat
+python %IDF_PATH%\components\esptool_py\esptool\espsecure.py generate_flash_encryption_key key.bin
 ```
 
-Além disso, duas configurações precisam de atenção. Por padrão, ambas estão ativadas, porém é interessante se certificar.  
+Em seguida, a chave deve ser enviada ao dispositivo __(_Essa ação é IRREVERSÍVEL_)__.
 
+``` bat
+python %IDF_PATH%\components\esptool_py\esptool\espefuse.py --port {PORTA} burn_key flash_encryption key.bin 
 ```
-CONFIG_ESP_WIFI_ENABLE_WPA3_SAE=y
-CONFIG_ESP_WIFI_ENABLE_SAE_PK=y
-```
+
+Duas configurações devem ser alteradas:
+
+![Configurações a serem alteradas](../images/config_crypto.png)
+
+Com isso, a criptografia está habilitada e o conteúdo da memória será criptografado na primeira inicialização após o carregamento do programa ao dispositivo.
 
 ## Organização do código
 

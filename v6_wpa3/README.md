@@ -1,4 +1,4 @@
-# MQTT - WPA3
+# _Wi-Fi Protected Access-3_ WPA3
 
 Essa é a implementação da quinta medida de segurança tomada: Implementação da autenticação por WPA3 no Wi-Fi.  
 

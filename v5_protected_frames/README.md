@@ -1,4 +1,4 @@
-# MQTT - _Protected Management Frames_ (PMF)
+# _Protected Management Frames_ (PMF)
 
 Essa é a implementação da quarta medida de segurança tomada: proteção dos _frames_ de gerenciamento Wi-Fi, a fim de evitar ataques _de-auth_.  
 
