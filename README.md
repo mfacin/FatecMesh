@@ -21,6 +21,7 @@ Este repositório está dividido na seguinte estrutura:
 [`v4_mqtt_tls_mutuo/`](./v4_mqtt_tls_mutuo/) - Contém o código do cenário onde a autenticação dos clientes via certificado é implementada no MQTTS  
 [`v5_protected_frames/`](./v5_protected_frames/) - Contém o código do cenário onde o recurso de _Protected Management Frames_ (PMF) é implementado  
 [`v6_wpa3/`](./v6_wpa3/) - Contém o código do cenário onde a obrigatoriedade do WPA3 é implementado  
+[`v7_criptografia_flash/`](./v7_criptografia_flash/) - Contém o código do cenário onde a criptografia da memória flash é implementada  
   
 [`configs/`](./postman/) - Arquivos de configuração do Docker e Mosquitto para cada cenário  
 [`images/`](./images/) - Imagens de apoio e explicações  
