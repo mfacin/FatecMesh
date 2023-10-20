@@ -24,10 +24,15 @@ Duas configurações devem ser alteradas:
 
 ![Configurações a serem alteradas](../images/config_crypto.png)
 
-Com isso, a criptografia está habilitada e o conteúdo da memória será criptografado na primeira inicialização após o carregamento do programa ao dispositivo.
+Com isso, a criptografia está habilitada e o conteúdo da memória será criptografado na primeira inicialização após o carregamento do programa ao dispositivo.  
+
+Para realizar o carregamento de código após a configuração da criptografia no modo `release`, criptografe o código antes e depois carregue seguindo as instruções em [`Cript_Flash.md`](Cript_Flash.md).  
 
 ## Organização do código
 
+`key.bin` - Chave de criptografia da memória flash.  
+`Cript_Flash.md` - Instruções para carregamento de firmware criptografado.  
+`enc/` - Contém o firmware, bootloader e tabela de partições criptografadas.  
 `main/mesh_main.c` - Contém as inicialização do WiFi, mesh e MQTT, as tasks de envio das mensagens MQTT, e a retransmissão de mensagens para a rede externa pelo root.  
 `main/mesh_event_handler.c` - Contém o handler dos eventos do esp_mesh.  
 `main/mqtt_event_handler.c` - Contém o handler dos eventos do mqtt_client.  
